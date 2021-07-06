@@ -16,6 +16,7 @@ exports.create = (req, res, next) => {
                 name:req.body.name,
                 image:req.body.image,
                 description:req.body.description,
+                image: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
 
             });
             category.save()

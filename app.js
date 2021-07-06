@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const app = express();
 const auth = require('./midleware/auth');
-
+const path = require('path');
 const staffRoutes = require('./routes/staff');
 const userRoutes = require('./routes/user');
 const demandeRoutes = require('./routes/demande');
@@ -31,7 +31,7 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
     next();
 });
-
+app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/api/staff',staffRoutes);
 app.use('/api/user',userRoutes);
 app.use('/api/devis',devisRoutes);
@@ -42,6 +42,7 @@ app.use('/api/subcategory',subcategoryRoutes);
 app.use('/api/category',categoryRoutes);
 app.use('/api/subcategory',subcategoryRoutes);
 module.exports = app;
+
 
 
 

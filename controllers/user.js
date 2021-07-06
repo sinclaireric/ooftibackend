@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 
 const User = require('../models/user');
 const Staff =  require ('../models/staff');
-const Client =  require ('../models/Client');
+const Client =  require ('../models/client');
 const Entreprise =  require ('../models/Entreprise');
 
 
