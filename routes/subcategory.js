@@ -5,7 +5,7 @@ const auth = require('../midleware/auth');
 const subcategoryCtrl = require('../controllers/subcategory');
 
 router.post('/create',auth, subcategoryCtrl.create)
-router.get('/all',auth, subcategoryCtrl.getAll)
+router.get('/all', subcategoryCtrl.getAll)
 
 
 module.exports = router;

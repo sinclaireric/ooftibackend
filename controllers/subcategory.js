@@ -1,4 +1,5 @@
 const SubCategory = require('../models/subcategory');
+const Category = require('../models/category');
 
 
 exports.getAll = (req, res, next) => {
@@ -11,7 +12,7 @@ exports.getAll = (req, res, next) => {
 
 exports.create = (req, res, next) => {
 
-
+console.log('toto')
             const subcategory = new SubCategory({
                 name:req.body.name,
                 description:req.body.description,
@@ -21,11 +22,18 @@ exports.create = (req, res, next) => {
             subcategory.save()
                 .then(
                     (category) => {
+                        Category.findById(req.body.category).then(cat=>{
+                            console.log(cat)
+                            cat.subcategories.push(category)
+                            cat.save().then(
+                                res.status(201).json(category)
+                            )
+                        })
 
-                        res.status(201).json(category)
+                        
                     })
 
-                .catch(error => res.status(400).json({ error }));
+                .catch(error =>  res.status(400).json({ error }));
 
 
 };
