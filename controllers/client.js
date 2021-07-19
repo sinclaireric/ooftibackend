@@ -14,6 +14,16 @@ exports.getAll = (req, res, next) => {
 
 
 
+exports.getOne = (req, res, next) => {
+    console.log(req.params.id)
+    Client.findById(req.params.id)
+        .populate('demandes')
+        .then(client=> res.status(200).json(client))
+        .catch(error => res.status(400).json({ error }));
+
+};
+
+
 
 
 

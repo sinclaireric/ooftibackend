@@ -83,6 +83,25 @@ exports.createClient = (req, res, next) => {
 
                             })
                             client.save()
+                            .then(
+
+
+                                res.status(201).json({
+                                    idUser: user._id,
+                                    lastname:user.lastname,
+                                    role:user.role,
+                                    username:req.body.firstname,
+                                    token: jwt.sign(
+                                        { userId: user._id,
+                                            role:"CLIENT"
+                                        },
+                                        'MANCHESTER1FORSEMPOS&&&&11&&',
+                                        { expiresIn: '24h' }
+                                    )
+                                })
+
+                            )
+
                                 
 
                     
@@ -104,12 +123,14 @@ exports.createClient = (req, res, next) => {
 
 
 exports.createEntreprise = (req, res, next) => {
+    console.log("toto")
     bcrypt.hash(req.body.password, 10)
         .then(hash => {
             const user = new User({
                 password: hash,
                 email:req.body.email,
                 usertype:"ENTREPRISE",
+
 
 
             });
@@ -122,16 +143,38 @@ exports.createEntreprise = (req, res, next) => {
 
                             const client = new Entreprise({
 
-                                name:req.body.firstname,
+                                name:req.body.name,
                                 persone:req.body.lastname,
                                 id_user:user._id,
                                 user:user._id,
+                                site:req.body.site,
+                                rc:req.body.rc,
+                                category:req.body.category,
                                 email:req.body.email,
                                 phone:req.body.phone,
-                                adresse:req.body.adresse
+                                isPremium:false,
+                                adresse:req.body.adresse,
+                                picture: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+
 
                             })
-                            client.save()
+                            client.save().then(
+
+
+                                res.status(201).json({
+                                    idUser: user._id,
+                                    role:user.role,
+                                    username:req.body.name,
+                                    token: jwt.sign(
+                                        { userId: user._id,
+                                            role:"ENTREPRISE"
+                                        },
+                                        'MANCHESTER1FORSEMPOS&&&&11&&',
+                                        { expiresIn: '24h' }
+                                    )
+                                })
+
+                            )
                                 
 
                     
@@ -164,8 +207,7 @@ exports.login = (req, res, next) => {
                 return res.status(401).json({ error: 'Utilisateur non trouvé !' });
             }
             
-            console.log('ici',req.body.password)
-            console.log('ici2',staff.password)
+       
             bcrypt.compare(req.body.password, staff.user.password)
                 .then(valid => {
                     
@@ -198,6 +240,98 @@ exports.login = (req, res, next) => {
 };
 
 
+
+
+
+exports.loginapp = (req, res, next) => {
+
+    User.findOne({ email: req.body.email })
+        .then(user => {
+            console.log(user.usertype )
+
+            if(user.usertype  == "CLIENT") {
+
+                
+                 Client.findOne({id_user:user._id}).populate('user').then(u => {
+
+
+
+                    bcrypt.compare(req.body.password, u.user.password)
+                    .then(valid => {
+                        
+                        if (!valid) {
+                            return res.status(401).json({ error: 'Mot de passe incorrect !' });
+                        }
+    
+    
+                        res.status(201).json({
+                            idUser: u.user._id,
+                            role:u.user.role,
+                            lastname:u.lastname,
+                            avatar:u.picture,
+                            created:u.created_at,
+                            username:u.firstname,
+                            token: jwt.sign(
+                                { userId: u.user._id,
+                                    role:u.user.role
+                                },
+                                'MANCHESTER1FORSEMPOS&&&&11&&',
+                                { expiresIn: '24h' }
+                            )
+                        });
+    
+                    })
+                    .catch(error => res.status(500).json({ error }));
+
+
+                 })
+            } else {
+
+               
+
+                Entreprise.findOne({id_user:user._id}).populate('user').then(u => {
+
+
+                    bcrypt.compare(req.body.password, u.user.password)
+                    .then(valid => {
+                        
+                        if (!valid) {
+                            return res.status(401).json({ error: 'Mot de passe incorrect !' });
+                        }
+    
+    console.log(u.picture)
+                        res.status(201).json({
+                            idUser: u.user._id,
+                            role:u.user.role,
+                            lastname:u.name,
+                            created:u.created_at,
+                            avatar:u.picture,
+                            username:u.name,
+                            token: jwt.sign(
+                                { userId: u.user._id,
+                                    role:u.user.role
+                                },
+                                'MANCHESTER1FORSEMPOS&&&&11&&',
+                                { expiresIn: '24h' }
+                            )
+                        });
+    
+                    })
+                    .catch(error => res.status(500).json({ error }));
+
+
+                 })
+            }
+            
+       
+           
+
+
+
+        })
+        .catch(error => res.status(500).json({ error }));
+
+};
 
 
 

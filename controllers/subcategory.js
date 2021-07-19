@@ -12,7 +12,6 @@ exports.getAll = (req, res, next) => {
 
 exports.create = (req, res, next) => {
 
-console.log('toto')
             const subcategory = new SubCategory({
                 name:req.body.name,
                 description:req.body.description,

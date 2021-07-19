@@ -21,7 +21,7 @@ const DevisSchema = new mongoose.Schema({
   
     entreprise:{
         type: mongoose.Schema.Types.ObjectId,
-        ref:'Dntreprise',
+        ref:'Entreprise',
         required:true,
     },
 

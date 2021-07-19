@@ -19,6 +19,10 @@ const ClientSchema = new mongoose.Schema({
         required:true,
         unique:true
     },
+    created_at: {
+        type:Date,
+        default:Date.now
+    },
 
     phone:{
         type:String,

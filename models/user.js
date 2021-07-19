@@ -12,6 +12,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+   
     date_created: {
         type:Date,
         default:Date.now
@@ -20,7 +21,7 @@ const userSchema = new mongoose.Schema({
     usertype: {
         type:String,
         required:true,
-        enum:["STAFF","CLIENT","ENTERPRISE"]
+        enum:["STAFF","CLIENT","ENTREPRISE"]
     }
 
 })

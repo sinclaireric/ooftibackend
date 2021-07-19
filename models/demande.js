@@ -12,7 +12,11 @@ const DemandeSchema = new mongoose.Schema({
         type:String
     },
 
-    addresse:{
+    appel:{
+        type:String
+    },
+
+    adresse:{
         type:String
     },
 
@@ -37,18 +41,27 @@ const DemandeSchema = new mongoose.Schema({
         required:true,
     },
 
+    validedBy:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref:'Staff',
+    },
+
     category:{
         type: mongoose.Schema.Types.ObjectId,
         ref:'Category',
         required:true,
     },
-
-
-    devis:{
+    subcategory:{
         type: mongoose.Schema.Types.ObjectId,
-        ref:'Devis',
+        ref:'SubCategory',
         required:true,
     },
+
+
+    devis:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref:'Devis'
+    }],
 
    
 

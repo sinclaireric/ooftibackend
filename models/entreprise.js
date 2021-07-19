@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 
 const EntrepriseSchema = new mongoose.Schema({
 
-    firstname:{
+    name:{
         type:String,
         trim:true,
         required:true,
@@ -20,6 +20,16 @@ const EntrepriseSchema = new mongoose.Schema({
         trim:true,
         required:true,
         unique:true
+    },
+    rc:{
+        type:String,
+        trim:true,
+       
+    },
+    site:{
+        type:String,
+        trim:true,
+
     },
 
     phone:{
@@ -39,6 +49,9 @@ const EntrepriseSchema = new mongoose.Schema({
         type:String,
         required:true,
     },
+    expire_abo: {
+        type:Date,
+    },
 
     user: {
         type: mongoose.Schema.Types.ObjectId,
@@ -49,6 +62,16 @@ const EntrepriseSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref:'Devis',
     }],
+
+    abonnements:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref:'Abonnement',
+    }],
+
+    category:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref:'Category',
+    }
 
 
 
