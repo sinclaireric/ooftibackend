@@ -1,5 +1,6 @@
 const bcrypt = require ('bcrypt');
 const jwt = require('jsonwebtoken');
+const nodemailer = require("../config/nodemailer");
 
 const User = require('../models/user');
 const Staff =  require ('../models/staff');
@@ -58,19 +59,26 @@ const Entreprise =  require ('../models/Entreprise');
 exports.createClient = (req, res, next) => {
     bcrypt.hash(req.body.password, 10)
         .then(hash => {
+
+            const token = jwt.sign(
+                { 
+                    role:"CLIENT"
+                },
+                'MANCHESTER1FORSEMPOS&&&&11&&',
+                { expiresIn: '24000000000h' }
+            )
+          
             const user = new User({
                 password: hash,
                 email:req.body.email,
                 usertype:"CLIENT",
-
-
+                confirmationCode: token
             });
             user.save()
                 .then((user) => {
 
-                    
 
-                            user.save()
+                 
 
                             const client = new Client({
 
@@ -82,31 +90,22 @@ exports.createClient = (req, res, next) => {
                                 phone:req.body.phone
 
                             })
-                            client.save()
-                            .then(
+                            client.save((err) => {
+                           
 
 
-                                res.status(201).json({
-                                    idUser: user._id,
-                                    lastname:user.lastname,
-                                    role:user.role,
-                                    username:req.body.firstname,
-                                    token: jwt.sign(
-                                        { userId: user._id,
-                                            role:"CLIENT"
-                                        },
-                                        'MANCHESTER1FORSEMPOS&&&&11&&',
-                                        { expiresIn: '24h' }
-                                    )
-                                })
+                                res.status(201).end();
 
-                            )
+                                nodemailer.sendConfirmationEmail(
+                                    req.body.lastname,
+                                    req.body.email,
+                                    token
+                                  );
 
-                                
+                                });
 
-                    
 
-                    }
+                    } 
 
                 )
                 .catch(error => res.status(400).json({ error }));
@@ -123,13 +122,21 @@ exports.createClient = (req, res, next) => {
 
 
 exports.createEntreprise = (req, res, next) => {
-    console.log("toto")
     bcrypt.hash(req.body.password, 10)
         .then(hash => {
+            const token = jwt.sign(
+                { 
+                    role:"ENTREPRISE"
+                },
+                'MANCHESTER1FORSEMPOS&&&&11&&',
+                { expiresIn: '2400000h' }
+            )
+
             const user = new User({
                 password: hash,
                 email:req.body.email,
                 usertype:"ENTREPRISE",
+                confirmationCode: token
 
 
 
@@ -137,9 +144,7 @@ exports.createEntreprise = (req, res, next) => {
             user.save()
                 .then((user) => {
 
-                    
-
-                            user.save()
+                   
 
                             const client = new Entreprise({
 
@@ -158,23 +163,21 @@ exports.createEntreprise = (req, res, next) => {
 
 
                             })
-                            client.save().then(
+                            client.save((err) => {
+                           
+
+                               
 
 
-                                res.status(201).json({
-                                    idUser: user._id,
-                                    role:user.role,
-                                    username:req.body.name,
-                                    token: jwt.sign(
-                                        { userId: user._id,
-                                            role:"ENTREPRISE"
-                                        },
-                                        'MANCHESTER1FORSEMPOS&&&&11&&',
-                                        { expiresIn: '24h' }
-                                    )
-                                })
+                                res.status(201).end();
 
-                            )
+                                nodemailer.sendConfirmationEmail(
+                                    req.body.name,
+                                    req.body.email,
+                                    token
+                                  );
+
+                                });
                                 
 
                     
@@ -249,7 +252,11 @@ exports.loginapp = (req, res, next) => {
         .then(user => {
             console.log(user.usertype )
 
-            if(user.usertype  == "CLIENT") {
+            if (user.status != "Active") {
+                return res.status(401).send({
+                  message: "Pending Account. Please Verify Your Email!",
+                });
+              }else if (user.usertype  == "CLIENT") {
 
                 
                  Client.findOne({id_user:user._id}).populate('user').then(u => {
@@ -266,7 +273,7 @@ exports.loginapp = (req, res, next) => {
     
                         res.status(201).json({
                             idUser: u.user._id,
-                            role:u.user.role,
+                            role:u.user.usertype,
                             lastname:u.lastname,
                             avatar:u.picture,
                             created:u.created_at,
@@ -299,13 +306,14 @@ exports.loginapp = (req, res, next) => {
                             return res.status(401).json({ error: 'Mot de passe incorrect !' });
                         }
     
-    console.log(u.picture)
                         res.status(201).json({
                             idUser: u.user._id,
-                            role:u.user.role,
+                            role:u.user.usertype,
                             lastname:u.name,
                             created:u.created_at,
                             avatar:u.picture,
+                            premium:u.isPremium,
+                            fin_abo:u.date_fin_abo,
                             username:u.name,
                             token: jwt.sign(
                                 { userId: u.user._id,
@@ -334,4 +342,22 @@ exports.loginapp = (req, res, next) => {
 };
 
 
+exports.confirm = (req, res, next) => {
+    console.log(req.params.id)
+
+
+
+        User.findOneAndUpdate({confirmationCode:req.params.id}, {status:'Active'}, {
+            new: true,
+          })
+            .then(user => {
+              res.status(200).json({
+                message: "Successfuly Updated",
+                user
+              });
+            })
+            .catch(() => res.json(400).json({ message: "Error updating" }));
+      
+
+};
 

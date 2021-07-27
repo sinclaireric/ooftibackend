@@ -8,6 +8,7 @@ const banniereCtrl = require('../controllers/banniere');
 
 router.post('/create',auth,multer, banniereCtrl.create)
 router.get('/all',auth, banniereCtrl.getAll)
+router.get('/:id', banniereCtrl.getOne) 
 
 
 module.exports = router;

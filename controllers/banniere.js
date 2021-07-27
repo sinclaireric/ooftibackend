@@ -36,3 +36,10 @@ exports.create = (req, res, next) => {
 
 
 
+exports.getOne = (req, res, next) => {
+    console.log(req.params.id)
+    Banniere.find({emplacement:req.params.id})
+        .then(demande => res.status(200).json(demande))
+        .catch(error => res.status(400).json({ error }));
+
+};

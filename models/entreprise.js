@@ -68,6 +68,10 @@ const EntrepriseSchema = new mongoose.Schema({
         ref:'Abonnement',
     }],
 
+    date_fin_abo:{
+        type:Date
+    },
+
     category:{
         type: mongoose.Schema.Types.ObjectId,
         ref:'Category',

@@ -3,9 +3,9 @@ const mongoose  = require('mongoose');
 const DevisSchema = new mongoose.Schema({
 
 
-    total:{
-        type:Number,
-        required:true
+   
+    description:{
+        type:String
     },
 
     urlfile:{
@@ -22,6 +22,11 @@ const DevisSchema = new mongoose.Schema({
     entreprise:{
         type: mongoose.Schema.Types.ObjectId,
         ref:'Entreprise',
+        required:true,
+    },
+    client:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref:'Client',
         required:true,
     },
 
