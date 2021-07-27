@@ -52,6 +52,10 @@ const EntrepriseSchema = new mongoose.Schema({
     expire_abo: {
         type:Date,
     },
+    note:{
+type:Number,
+default: 0
+    },
 
     user: {
         type: mongoose.Schema.Types.ObjectId,
@@ -66,6 +70,11 @@ const EntrepriseSchema = new mongoose.Schema({
     abonnements:[{
         type: mongoose.Schema.Types.ObjectId,
         ref:'Abonnement',
+    }],
+
+    evaluations:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref:'Evaluation',
     }],
 
     date_fin_abo:{

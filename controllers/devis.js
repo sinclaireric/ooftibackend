@@ -33,7 +33,7 @@ exports.getClient = (req, res, next) => {
     
         Devis.find({client:client._id})
         .populate('category','name')
-        .populate('entreprise','name')
+        .populate('entreprise',{'name':1,'note':1,'picture':1,'date_created':1})  
         .populate('demande','description')
         .then(devis => res.status(200).json(devis))
         .catch(error => res.status(400).json({ error }));

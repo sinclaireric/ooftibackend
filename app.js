@@ -8,6 +8,8 @@ const staffRoutes = require('./routes/staff');
 const userRoutes = require('./routes/user');
 const demandeRoutes = require('./routes/demande');
 const devisRoutes = require('./routes/devis');
+const evaluationRoutes = require('./routes/evaluation');
+
 const banniereRoutes = require('./routes/banniere');
 const entrepriseRoutes = require('./routes/entreprise');
 const subcategoryRoutes = require('./routes/subcategory');
@@ -37,6 +39,7 @@ app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/api/staff',staffRoutes);
 app.use('/api/user',userRoutes);
 app.use('/api/devis',devisRoutes);
+app.use('/api/evaluation',evaluationRoutes);
 app.use('/api/banniere',banniereRoutes);
 app.use('/api/demande',demandeRoutes);
 app.use('/api/entreprise',entrepriseRoutes);

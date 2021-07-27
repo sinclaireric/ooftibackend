@@ -4,6 +4,7 @@ const Client = require('../models/client');
 const EntrepriseModel = require('../models/Entreprise');
 const User = require('../models/user');
 const bcrypt = require ('bcrypt'); 
+const nodemailer = require("../config/nodemailer");
 
 
 
@@ -43,7 +44,7 @@ exports.getPro = (req, res, next) => {
     EntrepriseModel.findOne({id_user:req.user._id}).populate('category')
               .then(entreprise => {
                 console.log(entreprise.category)
-                Demande.find({category:entreprise.category._id})
+                Demande.find({category:entreprise.category._id,status:'validé'})
                 .sort({ 'date_created' : -1})
                 .populate('category','name').populate('subcategory','name') 
                 .then(demandes => res.status(200).json(demandes))
@@ -135,8 +136,29 @@ exports.getOne = (req, res, next) => {
             // update with the new data
             Demande.findByIdAndUpdate(req.body.demande, {status:'validé'}, {
               new: true,
-            })
+            }).populate('category')
               .then(demande => {
+
+                console.log("dem",demande)
+
+                EntrepriseModel.find({category:demande.category._id,isPremium:true})
+                .then((entreprises) =>{
+                  console.log("ent",entreprises)
+entreprises.map(u=>{
+
+  nodemailer.sendNewDemandeNotif(
+    u.name,
+    u.email,
+    demande._id
+  );
+  
+
+})
+
+
+                })
+
+
                 res.status(200).json({
                   message: "Successfuly Updated",
                   demande
