@@ -2,6 +2,30 @@ const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
 const userSchema = new mongoose.Schema({
 
+  
+
+        dolibarrId: { 
+            type: String, 
+            unique: true },
+
+
+            username:{
+                type:String,
+                trim:true,
+                required:true,
+                unique:true
+            },
+
+            name:{
+                type:String,
+                trim:true,
+                required:true,
+            },
+
+            role:{
+                type:String,
+            },
+
     email:{
         type:String,
         trim:true,
@@ -13,24 +37,23 @@ const userSchema = new mongoose.Schema({
         required: true
     },
    
+    inventoryAcces: {
+        type:Boolean
+        },
+        orderAcces: {
+            type:Boolean
+            },
+            makeOrderAcces: {
+                type:Boolean
+                },
     date_created: {
         type:Date,
         default:Date.now
     },
     status: {
         type: String, 
-        enum: ['Pending', 'Active'],
-        default: 'Pending'
-      },
-      confirmationCode: { 
-        type: String, 
-        unique: true },
-
-    usertype: {
-        type:String,
-        required:true,
-        enum:["STAFF","CLIENT","ENTREPRISE"]
-    }
+        default: 'Active'
+      }
 
 })
 

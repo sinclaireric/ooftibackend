@@ -4,18 +4,9 @@ const bodyParser = require('body-parser');
 const app = express();
 const auth = require('./midleware/auth');
 const path = require('path');
-const staffRoutes = require('./routes/staff');
+const productRoutes = require('./routes/product');
 const userRoutes = require('./routes/user');
-const demandeRoutes = require('./routes/demande');
-const devisRoutes = require('./routes/devis');
-const evaluationRoutes = require('./routes/evaluation');
 
-const banniereRoutes = require('./routes/banniere');
-const entrepriseRoutes = require('./routes/entreprise');
-const subcategoryRoutes = require('./routes/subcategory');
-const categoryRoutes = require('./routes/category');
-const clientRoutes = require('./routes/client');
-const abonnementRoutes = require('./routes/abonnement');
 
 /* mongoose.connect('mongodb://127.0.0.1/sempos',
     { useNewUrlParser: true,
@@ -36,18 +27,10 @@ app.use((req, res, next) => {
     next();
 });
 app.use('/images', express.static(path.join(__dirname, 'images')));
-app.use('/api/staff',staffRoutes);
+
+app.use('/api/product',productRoutes);
 app.use('/api/user',userRoutes);
-app.use('/api/devis',devisRoutes);
-app.use('/api/evaluation',evaluationRoutes);
-app.use('/api/banniere',banniereRoutes);
-app.use('/api/demande',demandeRoutes);
-app.use('/api/entreprise',entrepriseRoutes);
-app.use('/api/client',clientRoutes);
-app.use('/api/subcategory',subcategoryRoutes);
-app.use('/api/category',categoryRoutes);
-app.use('/api/abonnement',abonnementRoutes);
-app.use('/api/subcategory',subcategoryRoutes);
+
 module.exports = app; 
 
 
